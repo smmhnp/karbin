@@ -29,8 +29,15 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        User::factory(10)->create();
-        Title::factory(3)->create();
-        Task::factory(10)->create();        
+        Title::updateOrCreate([
+            "title" => "داخلی",
+            "user_id" => User::first()->id,
+            "deadline" => "2225-12-30",
+            "sys" => 1
+        ]);
+
+        // User::factory(10)->create();
+        // Title::factory(3)->create();
+        // Task::factory(10)->create();        
     }
 }

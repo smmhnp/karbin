@@ -24,22 +24,19 @@ class TaskController extends Controller
     // public function dashboard()
     // {
     //     $response = Http::get('http://127.0.0.1:8000/api/task');
-
     //     if ($response->successful()) {
     //         $data = $response->json();
-
     //         return view('index', $data);
     //     } else {
-    //         return response()->json(['message' => 'خطا در دریافت داده‌ها'], 500);
+    //         return response()->json(['message' => 'error to get data!'], 500);
     //     }
     // }
 
     public function dashboard()
     {
-        $tasks = Title::with('tasks')->get();
-
+        $currentUser = Auth::user();
+        $tasks = Task::with('title')->where('undertaking', $currentUser->nickname)->get();
         return view('tasks.index', ['tasks' => $tasks]);
-
     }
 
 
@@ -47,8 +44,8 @@ class TaskController extends Controller
 
     public function board()
     {
-        $tasks = Title::with('tasks')->get();
-
+        $currentUser = Auth::user();
+        $tasks = Task::with('title')->where('undertaking', $currentUser->nickname)->get();
         return view('tasks.board', ['tasks' => $tasks]);
     }
 

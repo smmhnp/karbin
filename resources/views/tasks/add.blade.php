@@ -16,14 +16,27 @@
 
                 <div class="form-group">
                     <label for="taskTitle" class="form-label">عنوان</label>
-                    <select name="title_id" class="form-control" id="taskAssignee">
-                        <option value=""></option>
-                        @foreach ($titles as $title)
-                            <option value="{{ $title['id'] }}" {{ old('title') == $title['title'] ? 'selected' : '' }}>
-                                {{ $title['title'] }}
-                            </option>
-                        @endforeach
-                    </select>
+                    @if(Auth::user()->role == 'super_admin')
+                        <select name="title_id" class="form-control" id="taskAssignee">
+                            <option value=""></option>
+                            @foreach ($titles as $title)
+                                <option value="{{ $title['id'] }}" {{ old('title') == $title['title'] ? 'selected' : '' }}>
+                                    {{ $title['title'] }}
+                                </option>
+                            @endforeach
+                        </select>
+                    @else
+                        <select name="title_id" class="form-control" id="taskAssignee">
+                            <option value=""></option>
+                            @foreach ($titles as $title)
+                                @if($title['sys'] == 1)
+                                    <option value="{{ $title['id'] }}" {{ old('title') == $title['title'] ? 'selected' : '' }}>
+                                        {{ $title['title'] }}
+                                    </option>
+                                @endif
+                            @endforeach
+                        </select>
+                    @endif
                 </div>
 
                 <div class="form-group">

@@ -39,9 +39,26 @@ function color_preference_style ($preference){
     return $color;
 }
 
-function color_status_style ($preference){
+function translate_preference ($preference){
                         
     switch ($preference) :
+        case 'بالا' :
+            $preference = 'high';
+            break;
+        case 'متوسط' :
+            $preference = 'medium';
+            break;
+        case 'پایین' :
+            $preference = 'low';
+            break;
+    endswitch;
+
+    return $preference;
+}
+
+function color_status_style ($status){
+                        
+    switch ($status) :
         case 'برای انجام' :
             $color = 'todo';
             break;
@@ -57,6 +74,26 @@ function color_status_style ($preference){
     endswitch;
 
     return $color;
+}
+
+function translate_status($status){
+                        
+    switch ($status) :
+        case 'برای انجام' :
+            $status = 'todo';
+            break;
+        case 'در حال انجام' :
+            $status = 'inprogress';
+            break;
+        case 'بازبینی' :
+            $status = 'review';
+            break;
+        case 'انجام شده' :
+            $status = 'done';
+            break;
+    endswitch;
+
+    return $status;
 }
 
 function status ($status){

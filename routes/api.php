@@ -15,29 +15,29 @@ use App\Http\Controllers\AuthController;
 */
 
 
-Route::post('/users/login', [AuthController::class, 'login']);
+// Route::post('/users/login', [AuthController::class, 'login']);
 
-Route::group(['middleware' => 'auth:api'], function() 
-{
-    Route::get('/users', [UserApiController::class, 'users']);
+// Route::group(['middleware' => 'auth:api'], function() 
+// {
+//     Route::get('/users', [UserApiController::class, 'users']);
     
-    Route::post('/users/register', [UserApiController::class, 'register']);
+//     Route::post('/users/register', [UserApiController::class, 'register']);
     
-    Route::post('/users/logout', [UserApiController::class, 'logout']);
+//     Route::post('/users/logout', [UserApiController::class, 'logout']);
     
-    Route::post('/users/profile', [UserApiController::class, 'change']);
+//     Route::post('/users/profile', [UserApiController::class, 'change']);
     
-    //.............................................................................
+//     //.............................................................................
     
-    Route::get('/task', [TaskApiController::class, 'index']);
+//     Route::get('/task', [TaskApiController::class, 'index']);
     
-    Route::get('/task/show/{id}', [TaskApiController::class, 'show'])->name('show');
+//     Route::get('/task/show/{id}', [TaskApiController::class, 'show'])->name('show');
     
-    Route::post('/task/edit/{id}', [TaskApiController::class, 'editSubmit'])->name('editSubmit');
+//     Route::post('/task/edit/{id}', [TaskApiController::class, 'editSubmit'])->name('editSubmit');
     
-    Route::post('/task/add', [TaskApiController::class, 'store']);
+//     Route::post('/task/add', [TaskApiController::class, 'store']);
 
-    Route::get('/download/{id}', [TaskApiController::class, 'download']);
+//     Route::get('/download/{id}', [TaskApiController::class, 'download']);
 
-});
+// });
 

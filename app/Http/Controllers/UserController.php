@@ -128,20 +128,23 @@ class UserController extends ApiController
 
     public function change(profileRequest $request)
     {
-        if (!Hash::check($request->current_password, Auth::user()->password)) {
-            return back()
-                ->withErrors(['current_password' => 'رمز عبور فعلی نادرست است'])
-                ->withInput();
+        $user = Auth::user();
+
+        if ($request->current_password and !Hash::check($request->current_password, $user->password)) {
+            return back()->withErrors(['current_password' => 'رمز عبور فعلی نادرست است'])->withInput();
         }
 
-        
-        Auth::user()->update([
-            'password' => Hash::make($request->new_password)
-        ]);
+        $data = $request->only(['firstname', 'lastname']);
 
-        return redirect()->route('dashboard')->with('success', 'رمز عبور با موفقیت تغییر یافت');
+        if ($request->filled('new_password')) {
+            $data['password'] = Hash::make($request->new_password);
+        }
+
+        $user->update(array_filter($data));
+
+        return redirect()->route('profile')->with('success', 'پروفایل با موفقیت بروزرسانی شد');
     }
-    
+
 
     //................................................admin..............................
 

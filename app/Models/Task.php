@@ -29,6 +29,11 @@ class Task extends Model
         return $this->belongsTo(Title::class);
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     protected $casts = [
         'deadline' => 'date',
     ];  

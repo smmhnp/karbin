@@ -27,8 +27,8 @@
                             <button class="filter-dropdown-close" title="بستن"><i class="fas fa-times"></i></button>
                         </div>
                         <div class="filter-dropdown-body">
-                            <div class="filter-dropdown-item active" data-value="all">همه</div>
-                            <div class="filter-dropdown-item" data-value="todo">برای انجام</div>
+                            <div class="filter-dropdown-item active" data-value="todo">برای انجام</div>
+                            <div class="filter-dropdown-item" data-value="all">همه</div>
                             <div class="filter-dropdown-item" data-value="inprogress">در حال انجام</div>
                             <div class="filter-dropdown-item" data-value="review">بازبینی</div>
                             <div class="filter-dropdown-item" data-value="done">انجام شده</div>
@@ -52,46 +52,6 @@
                             <div class="filter-dropdown-item" data-value="high">بالا</div>
                             <div class="filter-dropdown-item" data-value="medium">متوسط</div>
                             <div class="filter-dropdown-item" data-value="low">پایین</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- پروژه Filter -->
-                <div class="filter-item">
-                    <button class="btn btn-sm btn-outline-secondary btn-filter" data-filter="project" id="projectFilterBtn">
-                        پروژه: همه <i class="fas fa-chevron-down"></i>
-                        <span class="filtered-indicator"></span>
-                    </button>
-                    <div class="filter-dropdown" id="projectFilterDropdown">
-                        <div class="filter-dropdown-header">
-                            <span class="filter-dropdown-title">فیلتر بر اساس پروژه</span>
-                            <button class="filter-dropdown-close" title="بستن"><i class="fas fa-times"></i></button>
-                        </div>
-                        <div class="filter-dropdown-body">
-                            <div class="filter-dropdown-item active" data-value="all">همه</div>
-                            <div class="filter-dropdown-item" data-value="alpha">پروژه آلفا</div>
-                            <div class="filter-dropdown-item" data-value="beta">پروژه بتا</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- مسئول Filter -->
-                <div class="filter-item">
-                    <button class="btn btn-sm btn-outline-secondary btn-filter" data-filter="assignee" id="assigneeFilterBtn">
-                        مسئول: همه <i class="fas fa-chevron-down"></i>
-                        <span class="filtered-indicator"></span>
-                    </button>
-                    <div class="filter-dropdown" id="assigneeFilterDropdown">
-                        <div class="filter-dropdown-header">
-                            <span class="filter-dropdown-title">فیلتر بر اساس مسئول</span>
-                            <button class="filter-dropdown-close" title="بستن"><i class="fas fa-times"></i></button>
-                        </div>
-                        <div class="filter-dropdown-body">
-                            <div class="filter-dropdown-item active" data-value="all">همه</div>
-                            <div class="filter-dropdown-item" data-value="Lead">Lead</div>
-                            <div class="filter-dropdown-item" data-value="DevLead">DevLead</div>
-                            <div class="filter-dropdown-item" data-value="Nass">Nass</div>
-                            <div class="filter-dropdown-item" data-value="Zara">Zara</div>
                         </div>
                     </div>
                 </div>

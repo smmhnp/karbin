@@ -47,30 +47,33 @@ function showTab(tabId) {
         // Update page title
         document.title = pageTitles[tabId] || 'سیستم مدیریت وظایف - TaskFlow';
         
-        // Update main title visibility based on section
+        // Update main title visibility
         const pageTitle = document.getElementById('page-title');
-        if (tabId === 'login-screen' || tabId === 'register-screen') {
-            pageTitle.style.display = 'none';
-        } else {
-            pageTitle.style.display = 'block';
-            pageTitle.textContent = 'سیستم مدیریت وظایف سازمانی';
+        if (pageTitle) {
+            if (tabId === 'login-screen' || tabId === 'register-screen') {
+                pageTitle.style.display = 'none';
+            } else {
+                pageTitle.style.display = 'block';
+                pageTitle.textContent = 'سیستم مدیریت وظایف سازمانی';
+            }
         }
 
-        // Update navigation active state
+        // Update nav active state
         updateNavActiveState(tabId);
-        
-        // Update task counts when entering workflow screen
+
         if (tabId === 'workflow-board-screen') {
             updateTaskCounts();
         }
+
     } else {
-        // Fallback to login screen if section not found
-        document.getElementById('login-screen').style.display = 'block';
+        // Fallback to login screen
+        const loginScreen = document.getElementById('login-screen');
+        if (loginScreen) loginScreen.style.display = 'block';
     }
-    
+
     // Hide mobile menu if it was open
     const mobileMenu = document.querySelector('.mobile-menu-drawer');
-    mobileMenu.classList.remove('open');
+    if (mobileMenu) mobileMenu.classList.remove('open');
 }
 
 // Update active state in navigation
@@ -213,10 +216,6 @@ function getFilterLabel(type, value) {
             medium: 'متوسط',
             low: 'پایین'
         },
-        project: {
-            alpha: 'پروژه آلفا',
-            beta: 'پروژه بتا'
-        }
     };
     
     return type === 'assignee' ? value : labels[type][value];
@@ -229,7 +228,7 @@ function filterDashboardTasks() {
     let visibleCount = 0;
     
     rows.forEach(row => {
-        const rowStatus = row.getAttribute('data-status');
+        const rowStatus = row.getAttribute('data-status').toLowerCase();
         const rowPriority = row.getAttribute('data-priority');
         const rowProject = row.getAttribute('data-project');
         const rowAssignee = row.getAttribute('data-assignee');
@@ -354,8 +353,8 @@ function filterWorkflowTasks() {
 
 // Update task counts in workflow view
 function updateTaskCounts(counts = null) {
+    // اگر counts نداده شد، خودش محاسبه کند
     if (!counts) {
-        // If no counts provided, count visible tasks in each stage
         counts = {
             todo: document.querySelectorAll('#todo-tasks .task-card-horizontal:not(.filtered-out)').length,
             inprogress: document.querySelectorAll('#inprogress-tasks .task-card-horizontal:not(.filtered-out)').length,
@@ -363,29 +362,52 @@ function updateTaskCounts(counts = null) {
             done: document.querySelectorAll('#done-tasks .task-card-horizontal:not(.filtered-out)').length
         };
     }
-    
-    // Update the DOM with counts
-    document.querySelector('.workflow-stage:nth-child(1) .task-count').textContent = `(${counts.todo})`;
-    document.querySelector('.workflow-stage:nth-child(2) .task-count').textContent = `(${counts.inprogress})`;
-    document.querySelector('.workflow-stage:nth-child(3) .task-count').textContent = `(${counts.review})`;
-    document.querySelector('.workflow-stage:nth-child(4) .task-count').textContent = `(${counts.done})`;
+
+    // فقط اگر عنصر workflow-stage وجود داشت، آپدیت کن
+    const stages = document.querySelectorAll('.workflow-stage');
+    if (stages.length === 0) {
+        return; // اگر صفحه workflow نیست، کاری نکن
+    }
+
+    // حالا امن آپدیت کن
+    const todoEl    = document.querySelector('.workflow-stage:nth-child(1) .task-count');
+    const inprogEl  = document.querySelector('.workflow-stage:nth-child(2) .task-count');
+    const reviewEl  = document.querySelector('.workflow-stage:nth-child(3) .task-count');
+    const doneEl    = document.querySelector('.workflow-stage:nth-child(4) .task-count');
+
+    if (todoEl)    todoEl.textContent    = `(${counts.todo})`;
+    if (inprogEl)  inprogEl.textContent  = `(${counts.inprogress})`;
+    if (reviewEl)  reviewEl.textContent  = `(${counts.review})`;
+    if (doneEl)    doneEl.textContent    = `(${counts.done})`;
 }
 
 // Search functionality
 function setupSearch() {
     // Dashboard search
     const dashboardSearch = document.getElementById('dashboard-search');
-    dashboardSearch.addEventListener('input', function() {
-        activeFilters.dashboard.search = this.value;
-        filterDashboardTasks();
-    });
-    
+    if (dashboardSearch) {
+        function debounce(fn, delay = 300) {
+            let timeout;
+            return function(...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => fn.apply(this, args), delay);
+            };
+        }
+
+        dashboardSearch.addEventListener('input', debounce(function() {
+            activeFilters.dashboard.search = this.value;
+            filterDashboardTasks();
+        }));
+    }
+
     // Workflow search
     const workflowSearch = document.getElementById('workflow-search');
-    workflowSearch.addEventListener('input', function() {
-        activeFilters.workflow.search = this.value;
-        filterWorkflowTasks();
-    });
+    if (workflowSearch) {
+        workflowSearch.addEventListener('input', function() {
+            activeFilters.workflow.search = this.value;
+            filterWorkflowTasks();
+        });
+    }
 }
 
 // Highlight search term in text

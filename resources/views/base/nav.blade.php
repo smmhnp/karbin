@@ -12,7 +12,9 @@
         @if (Auth::check())
             <a href="{{ route('dashboard') }}" class="nav-link"><i class="fas fa-list-ul fa-fw"></i> داشبورد</a>
             <a href="{{ route('board') }}" class="nav-link"><i class="fas fa-folder fa-fw"></i> تابلوی جریان کار</a>
-            <a href="{{ route('project') }}" class="nav-link"><i class="fas fa-folder fa-fw"></i> پروژه‌ها</a>
+            @if (isset(Auth::user()->role) and Auth::user()->role == 'super_admin')
+                <a href="{{ route('project') }}" class="nav-link"><i class="fas fa-folder fa-fw"></i> پروژه‌ها</a>
+            @endif
             <a href="{{ route('profile') }}" class="nav-link"><i class="fas fa-user-cog fa-fw"></i> پروفایل</a>
 
             @if (isset(Auth::user()->role) and Auth::user()->role == 'super_admin')

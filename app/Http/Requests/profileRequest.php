@@ -22,9 +22,13 @@ class profileRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'current_password' => 'required',
-            'new_password' => 'required|min:6',
-            'confirm_new_password' => 'required|same:new_password',
+            'current_password' => 'nullable',
+
+            'new_password' => 'nullable|min:6|required_with:confirm_new_password',
+            'confirm_new_password' => 'nullable|same:new_password|required_with:new_password',
+
+            'firstname' => 'nullable|string|max:255',
+            'lastname'  => 'nullable|string|max:255',
         ];
     }
 
