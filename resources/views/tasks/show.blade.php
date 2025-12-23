@@ -101,11 +101,19 @@
             @endif
 
             @if($data['task']->status != 'انجام شده')
-                <form action="{{ route('done', ['id' => $data['task'] -> id]) }}" method="post">
-                    @csrf
-                    <input type="hidden" name="status" value="انجام شده">
-                    <button class="btn btn-success"><i class="fas fa-check-circle"></i>علامت زدن به عنوان انجام شده</button>
-                </form>
+                @if($data['task']->status == 'در حال انجام')
+                    <form action="{{ route('done', ['id' => $data['task'] -> id]) }}" method="post">
+                        @csrf
+                        <input type="hidden" name="status" value="انجام شده">
+                        <button class="btn btn-success"><i class="fas fa-check-circle"></i>علامت زدن به عنوان انجام شده</button>
+                    </form>
+                @elseif($data['task']->status == 'برای انجام')
+                    <form action="{{ route('done', ['id' => $data['task'] -> id]) }}" method="post">
+                        @csrf
+                        <input type="hidden" name="status" value="در حال انجام">
+                        <button class="btn btn-success"><i class="fas fa-check-circle"></i>شروع وظیفه</button>
+                    </form>
+                @endif
             @endif
             <button type="button" class="btn btn-secondary" onclick="window.location.href='{{ route('dashboard') }}'"><i class="fas fa-times"></i> بازگشت</button>
         </div>

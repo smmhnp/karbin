@@ -25,6 +25,51 @@
     </nav>
     
     <div class="header-actions">
+        @php
+            $user = Auth::user();
+        @endphp
+
+        <div class="notif-wrapper">
+            <button id="notifBtn" class="btn btn-light notif-btn">
+                <i class="fas fa-bell"></i>
+
+                @if($user->unreadNotifications->count())
+                    <span class="notif-badge">
+                        {{ $user->unreadNotifications->count() }}
+                    </span>
+                @endif
+            </button>
+            <div id="notifDropdown" class="notif-dropdown">
+                <div class="notif-header">
+                    <span>نوتیفیکیشن‌ها</span>
+                    <small>{{ $user->unreadNotifications->count() }} خوانده نشده</small>
+                </div>
+
+                <div class="notif-body">
+                    @forelse($user->notifications->take(4) as $notification)
+                        <div class="notif-item {{ $notification->read_at ? '' : 'unread' }}">
+                            <div class="notif-icon">
+                                <i class="fas fa-tasks"></i>
+                            </div>  
+                            <div class="notif-content">
+                                <strong>{{ $notification->data['title'] }}</strong>
+                                <p>{{ $notification->data['message'] }}</p>
+                                <span>{{ jDate($notification->created_at->diffForHumans())->ago() }}</span>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="notif-empty">
+                            نوتیفیکیشنی وجود ندارد
+                        </div>
+                    @endforelse
+                </div>
+
+                <div class="notif-footer">
+                    <a href="{{ route('notifications.index') }}">مشاهده همه</a>
+                </div>
+            </div>
+        </div>
+
 
         <a href="{{ route('add') }}" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> وظیفه جدید</a>
 

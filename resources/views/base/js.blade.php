@@ -514,4 +514,42 @@ document.addEventListener('DOMContentLoaded', function() {
         window.location.hash = '#login-screen';
     }
 });
+
+
+// Notification
+const notifBtn = document.getElementById('notifBtn');
+const notifDropdown = document.getElementById('notifDropdown');
+const notifBadge = notifBtn.querySelector('.notif-badge');
+
+let alreadyRead = false;
+
+notifBtn.addEventListener('click', function (e) {
+    e.stopPropagation();
+    notifDropdown.classList.toggle('show');
+
+    if (!alreadyRead && notifBadge) {
+        fetch('{{ route("notifications.read") }}', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json'
+            }
+        })
+        .then(() => {
+            alreadyRead = true;
+
+            notifBadge.style.display = 'none';
+
+            document.querySelectorAll('.notif-item.unread').forEach(item => {
+                item.classList.remove('unread');
+                item.classList.add('read');
+            });
+        });
+    }
+});
+
+document.addEventListener('click', function () {
+    notifDropdown.classList.remove('show');
+});
+
 </script>

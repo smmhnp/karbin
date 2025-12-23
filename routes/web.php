@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CommentController;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', [TaskController::class, 'dashboard'])->name('main');
 
@@ -78,5 +79,17 @@ Route::group(['middleware' => 'auth'], function(){
     Route::get('/project-list', [TaskController::class, 'list'])->name('project');
     
     Route::get('/download/{id}', [TaskController::class, 'webDownload'])->name('file.download');
+
+    Route::post('/notifications/read', function () {
+        Auth::user()->unreadNotifications->markAsRead();
+        return response()->json(['status' => 'ok']);
+    })->name('notifications.read');
+
+    Route::get('/notifications', function () {
+        $user = Auth::user();
+        $notifications = $user->notifications()->latest()->paginate(20); // صفحه بندی 20 تا
+        return view('notifications.index', compact('notifications'));
+    })->name('notifications.index');
+
 });
 

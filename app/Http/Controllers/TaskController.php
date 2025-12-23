@@ -13,6 +13,7 @@ use App\Models\Task;
 use App\Models\User;
 use App\Models\Comment;
 use App\Models\Title;
+use App\Notifications\TaskNotification;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Http;
 
@@ -133,6 +134,12 @@ class TaskController extends Controller
             'attachment_path' => $attachmentPath,
         ]);
 
+        $assignee = User::where('nickname', $request->input('undertaking'))->first();
+
+        if ($assignee) {
+            $assignee->notify(new TaskNotification('task_updated', $task));
+        }
+
         return redirect()->route('dashboard')->with('success', 'تسک با موفقیت ویرایش شد');
     }
 
@@ -183,7 +190,7 @@ class TaskController extends Controller
             $attachmentPath = $request->file('attachment')->store('private/tasks', 'local');
         }
 
-        Task::create([
+        $task = Task::create([
             'user_id' => Auth::id(),
             'title_id' => $request['title_id'],
             'project_name' => $request['project_name'],
@@ -195,6 +202,12 @@ class TaskController extends Controller
             'attachment_path' => $attachmentPath,
         ]);
 
+        $assignee = User::where('nickname', $request['undertaking'])->first();
+
+        if ($assignee) {
+            $assignee->notify(new TaskNotification('task_created', $task));
+        } 
+
         return redirect()->route('dashboard')->with('success', 'تسک با موفقیت اضافه شد.');
     }
 
@@ -204,17 +217,22 @@ class TaskController extends Controller
     public function AddProject()
     {
         $users = User::all();
-        
         return view('tasks.AddProject', ['users' => $users]);
     }
 
     public function AddProjectSubmit(projectRequest $request)
     {
-        Title::create([
+        $title = Title::create([
             'title' => $request['title'],
             'user_id' => $request['undertaking'],
             'deadline' => $request['deadline'],
         ]);
+
+        $assignee = User::where('nickname', $request['undertaking'])->first();
+
+        if ($assignee) {
+            $assignee->notify(new TaskNotification('project_created', $title));
+        } 
 
         return redirect()->route('dashboard')->with('success', 'تسک با موفقیت اضافه شد.');
     }
@@ -226,11 +244,18 @@ class TaskController extends Controller
         try {
             $task = Task::findOrFail($id);
 
+            $assignee = User::where('nickname', $task->undertaking)->first();
+
             if ($task->attachment_path && Storage::exists($task->attachment_path)) {
                 Storage::delete($task->attachment_path);
             }
 
+            $taskTitle = $task->title;
             $task->delete();
+
+            if ($assignee) {
+                $assignee->notify(new TaskNotification('delete_task', (object)['title' => $taskTitle]));
+            }
 
             return redirect()->route('tasks.index')->with('success', 'تسک با موفقیت حذف شد.');
 
@@ -268,9 +293,17 @@ class TaskController extends Controller
     {
         $task = Task::findOrFail($id);
 
+        $oldStatus = $task->status;
+
         $task->update([
             'status' => $request->input('status'),
         ]);
+
+        $assignee = User::where('nickname', $task->undertaking)->first();
+
+        if ($assignee) {
+            $assignee->notify(new TaskNotification('task_status_changed', $task));
+        }
         
         return redirect()->route('dashboard')->with('success', 'تسک به عنوان انجام شده ذخیره شد');
     }
